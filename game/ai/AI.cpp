@@ -1627,6 +1627,14 @@ void idAI::Killed( idEntity *inflictor, idEntity *attacker, int damage, const id
 
 	aifl.dead = true;
 
+	//mod
+	if (attacker->IsType(idPlayer::GetClassType())) {
+		auto killer = static_cast<idPlayer*>(attacker);
+		int exp = killer->inventory.experience += 10;
+		gameLocal.Printf("KILLED EXP: %d\n", exp);
+	}
+	//endmod
+
 	// turn off my flashlight, if I had one
 	ProcessEvent( &AI_Flashlight, false );
 

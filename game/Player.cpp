@@ -200,6 +200,7 @@ idInventory::Clear
 */
 void idInventory::Clear( void ) {
 	maxHealth			= 0;
+	experience			= 0;
 	weapons				= 0;
 	carryOverWeapons	= 0;
 	powerups			= 0;
@@ -337,6 +338,9 @@ void idInventory::RestoreInventory( idPlayer *owner, const idDict &dict ) {
 
 	// health/armor
 	maxHealth		= dict.GetInt( "maxhealth", "100" );
+	//mod
+	experience		= dict.GetInt("experience", "0");
+	//endmod
 	armor			= dict.GetInt( "armor", "50" );
 	maxarmor		= dict.GetInt( "maxarmor", "100" );
 
@@ -400,6 +404,7 @@ void idInventory::Save( idSaveGame *savefile ) const {
 	int i;
 
 	savefile->WriteInt( maxHealth );
+	savefile->WriteInt( experience );
 	savefile->WriteInt( weapons );
 	savefile->WriteInt( powerups );
 	savefile->WriteInt( armor );
@@ -480,6 +485,7 @@ void idInventory::Restore( idRestoreGame *savefile ) {
 	int i, num;
 
 	savefile->ReadInt( maxHealth );
+	savefile->ReadInt( experience );
 	savefile->ReadInt( weapons );
 	savefile->ReadInt( powerups );
 	savefile->ReadInt( armor );
