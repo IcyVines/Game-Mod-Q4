@@ -195,7 +195,10 @@ const int	ASYNC_PLAYER_TOURNEY_STATUS_BITS = idMath::BitsForInteger( PTS_NUM_STA
 class idInventory {
 public:
 	int						maxHealth;
+	//Mod
 	int						experience;
+	int						stats[6];
+	//Modend
 	int						weapons;
 // RITUAL BEGIN
 // squirrel: Mode-agnostic buymenus
@@ -641,6 +644,9 @@ public:
 	void					ResetHUDWeaponSwitch( void );
 #endif
 	void					UpdateHudStats( idUserInterface *hud );
+	//Mod
+	void					UpdateXPBar(idUserInterface *hud);
+	//endmod
  	void					UpdateHudAmmo( idUserInterface *hud );
  	void					ShowTip( const char *title, const char *tip, bool autoHide );
  	void					HideTip( void );

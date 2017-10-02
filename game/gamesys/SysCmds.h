@@ -8,4 +8,9 @@ void KillEntities( const idCmdArgs &args, const idTypeInfo &superClass );
 
 void GiveStuffToPlayer( idPlayer* player, const char* name, const char* value );
 
+//Mod
+void CheckPlayerStat( idPlayer* player, const char* name);
+void AddStatToPlayer( idPlayer* player, const char* name, const char* value);
+//Mod End
+
 #endif /* !__SYS_CMDS_H__ */

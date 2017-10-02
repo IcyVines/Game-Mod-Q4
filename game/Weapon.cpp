@@ -32,6 +32,15 @@ END_CLASS
 
 ***********************************************************************/
 
+//Mod
+#define Dexterity 0
+#define Perception 1
+#define Agility 2
+#define Vitality 3
+#define Endurance 4
+#define Luck 5
+//Mod End
+
 /*
 ================
 rvViewWeapon::rvViewWeapon()
@@ -2505,6 +2514,17 @@ rvWeapon::Attack
 void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuseOffset, float power ) {
 	idVec3 muzzleOrigin;
 	idMat3 muzzleAxis;
+
+	//Mod
+	if (owner->IsType(idPlayer::GetClassType())) {
+		auto player = static_cast<idPlayer*>(owner);
+		int perception = owner->inventory.stats[Perception];
+		spread *= (1 - perception / 100.0f);
+		if (spread < 0) {
+			spread = 0;
+		}
+	}
+	//Mod End
 	
 	if ( !viewModel ) {
 		common->Warning( "NULL viewmodel %s\n", __FUNCTION__ );

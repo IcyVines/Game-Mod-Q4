@@ -119,6 +119,15 @@ const idEventDef EV_Player_AllowNewObjectives( "<allownewobjectives>" );
 
 // RAVEN END
 
+//Mod
+#define Dexterity 0
+#define Perception 1
+#define Agility 2
+#define Vitality 3
+#define Endurance 4
+#define Luck 5
+//Mod End
+
 CLASS_DECLARATION( idActor, idPlayer )
 //	EVENT( EV_Player_HideDatabaseEntry,		idPlayer::Event_HideDatabaseEntry )
 	EVENT( EV_Player_ZoomIn,				idPlayer::Event_ZoomIn )
@@ -200,7 +209,10 @@ idInventory::Clear
 */
 void idInventory::Clear( void ) {
 	maxHealth			= 0;
+	//Mod
 	experience			= 0;
+	for (int i = 0; i < 6; i++) stats[i] = 0;
+	//Mod End
 	weapons				= 0;
 	carryOverWeapons	= 0;
 	powerups			= 0;
@@ -338,9 +350,9 @@ void idInventory::RestoreInventory( idPlayer *owner, const idDict &dict ) {
 
 	// health/armor
 	maxHealth		= dict.GetInt( "maxhealth", "100" );
-	//mod
+	//Mod
 	experience		= dict.GetInt("experience", "0");
-	//endmod
+	//Mod End
 	armor			= dict.GetInt( "armor", "50" );
 	maxarmor		= dict.GetInt( "maxarmor", "100" );
 
@@ -404,7 +416,12 @@ void idInventory::Save( idSaveGame *savefile ) const {
 	int i;
 
 	savefile->WriteInt( maxHealth );
+	//Mod
 	savefile->WriteInt( experience );
+	for (i = 0; i < 6; i++) {
+		savefile->WriteInt(stats[i]);
+	}
+	//Mod End
 	savefile->WriteInt( weapons );
 	savefile->WriteInt( powerups );
 	savefile->WriteInt( armor );
@@ -485,7 +502,12 @@ void idInventory::Restore( idRestoreGame *savefile ) {
 	int i, num;
 
 	savefile->ReadInt( maxHealth );
+	//Mod
 	savefile->ReadInt( experience );
+	for (i = 0; i < 6; i++) {
+		savefile->ReadInt(stats[i]);
+	}
+	//Mod End
 	savefile->ReadInt( weapons );
 	savefile->ReadInt( powerups );
 	savefile->ReadInt( armor );
@@ -3386,6 +3408,11 @@ void idPlayer::UpdateHudAmmo( idUserInterface *_hud ) {
 	} 
 
 	_hud->SetStateBool( "player_ammo_empty", ( ammoamount == 0 ) );
+}
+
+//ModXPBar
+void idPlayer::UpdateXPBar(idUserInterface *_hud) {
+	_hud->SetStateInt("player_experience", inventory.experience);
 }
 
 /*
@@ -8764,6 +8791,10 @@ void idPlayer::AdjustSpeed( void ) {
 		speed *= 0.33f;
 	}
 
+	//Mod
+	speed += 10*inventory.stats[Agility];
+	//Mod End
+
 	physicsObj.SetSpeed( speed, pm_crouchspeed.GetFloat() );
 }
 
@@ -9649,6 +9680,7 @@ void idPlayer::Think( void ) {
 		inBuyZone = false;
 
 	inBuyZonePrev = false;
+
 }
 
 /*
@@ -10263,6 +10295,10 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 				damage *= dynamicProtectionScale;
 			}
 		}
+
+		//Mod
+		damage *= (1 - inventory.stats[Endurance]/100.0f);
+		//Mod End
 
 		if ( damage < 1 ) {
 			damage = 1;
@@ -11898,7 +11934,7 @@ void idPlayer::LocalClientPredictionThink( void ) {
 	}
 
 	UpdateHud();
-
+	
  	if ( gameLocal.isNewFrame ) {
  		UpdatePowerUps();
  	}

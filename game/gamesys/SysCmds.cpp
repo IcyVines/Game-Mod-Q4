@@ -555,6 +555,126 @@ void Cmd_Give_f( const idCmdArgs &args ) {
 }
 // RITUAL END
 
+//Mod
+#define Dexterity 0
+#define Perception 1
+#define Agility 2
+#define Vitality 3
+#define Endurance 4
+#define Luck 5
+
+void CheckPlayerStat( idPlayer* player, const char* name)
+{
+
+	if (!player || !name) {
+		return;
+	}
+
+	if (idStr::Icmp(name, "dexterity") == 0) {
+		gameLocal.Printf("Dexterity: %d\n", player->inventory.stats[Dexterity]);
+	}
+	else if (idStr::Icmp(name, "perception") == 0) {
+		gameLocal.Printf("Perception: %d\n", player->inventory.stats[Perception]);
+	}
+	else if (idStr::Icmp(name, "agility") == 0) {
+		gameLocal.Printf("Agility: %d\n", player->inventory.stats[Agility]);
+	}
+	else if (idStr::Icmp(name, "vitality") == 0) {
+		gameLocal.Printf("Vitality: %d\n", player->inventory.stats[Vitality]);
+	}
+	else if (idStr::Icmp(name, "endurance") == 0) {
+		gameLocal.Printf("Endurance: %d\n", player->inventory.stats[Endurance]);
+	}
+	else if (idStr::Icmp(name, "luck") == 0) {
+		gameLocal.Printf("Luck: %d\n", player->inventory.stats[Luck]);
+	}
+	else if (idStr::Icmp(name, "all") == 0) {
+		gameLocal.Printf("Dexterity: %d\n", player->inventory.stats[Dexterity]);
+		gameLocal.Printf("Perception: %d\n", player->inventory.stats[Perception]);
+		gameLocal.Printf("Agility: %d\n", player->inventory.stats[Agility]);
+		gameLocal.Printf("Vitality: %d\n", player->inventory.stats[Vitality]);
+		gameLocal.Printf("Endurance: %d\n", player->inventory.stats[Endurance]);
+		gameLocal.Printf("Luck: %d\n", player->inventory.stats[Luck]);
+	}
+	else {
+		gameLocal.Printf("No Such Stat!\n");
+	}
+}
+
+void AddStatToPlayer( idPlayer* player, const char* name, const char* value)
+{
+	int stat = 0;
+
+	if (!player || !name) {
+		return;
+	}
+
+	if (!value) {
+		value = "1";
+	}
+
+	int amount = atoi(value);
+
+	if (idStr::Icmp(name, "dexterity") == 0) {
+		stat = Dexterity;
+	}
+	else if (idStr::Icmp(name, "perception") == 0) {
+		stat = Perception;
+	}
+	else if (idStr::Icmp(name, "agility") == 0) {
+		stat = Agility;
+	}
+	else if (idStr::Icmp(name, "vitality") == 0) {
+		stat = Vitality;
+	}
+	else if (idStr::Icmp(name, "endurance") == 0) {
+		stat = Endurance;
+	}
+	else if (idStr::Icmp(name, "luck") == 0) {
+		stat = Luck;
+	}
+	else {
+		gameLocal.Printf("No Such Stat!\n");
+		return;
+	}
+
+	int experience = player->inventory.experience;
+	if (experience < amount*30) {
+		gameLocal.Printf("Not Enough Experience! 30 Experience is needed to level up a stat. You have %d Experience.\n", experience);
+		return;
+	}
+	else {
+		player->inventory.stats[stat] += amount;
+		if (stat == Vitality) {
+			player->inventory.maxHealth += 3 * amount;
+			player->health += amount*2;
+		}
+		experience = player->inventory.experience -= amount*30;
+		gameLocal.Printf("Stat raised. You now have %d Experience.\n", experience);
+	}
+}
+
+
+void Cmd_CheckStat_f(const idCmdArgs &args) {
+	idPlayer	*player;
+	player = gameLocal.GetLocalPlayer();
+	if (!player) {
+		return;
+	}
+	CheckPlayerStat(player, args.Argv(1));
+}
+
+void Cmd_AddStat_f(const idCmdArgs &args) {
+	idPlayer	*player;
+	player = gameLocal.GetLocalPlayer();
+	if (!player) {
+		return;
+	}
+	AddStatToPlayer(player, args.Argv(1), args.Argv(2));
+}
+//Mod End
+
+
 /*
 ==================
 Cmd_CenterView_f
@@ -3090,6 +3210,10 @@ void idGameLocal::InitConsoleCommands( void ) {
 	cmdSystem->AddCommand( "listLines",				Cmd_ListDebugLines_f,		CMD_FL_GAME|CMD_FL_CHEAT,	"lists all debug lines" );
 	cmdSystem->AddCommand( "playerModel",			Cmd_PlayerModel_f,			CMD_FL_GAME|CMD_FL_CHEAT,	"sets the given model on the player", idCmdSystem::ArgCompletion_Decl<DECL_MODELDEF> );
 	cmdSystem->AddCommand( "flashlight",			Cmd_Flashlight_f,			CMD_FL_GAME|CMD_FL_CHEAT,	"toggle actor's flashlight", idGameLocal::ArgCompletion_AIName );
+	//Mod
+	cmdSystem->AddCommand("checkstat", Cmd_CheckStat_f, CMD_FL_GAME, "lets you check a stat's amount");
+	cmdSystem->AddCommand("addstat", Cmd_AddStat_f, CMD_FL_GAME, "lets you add to a stat's amount if possible");
+	//Mod End
 	
 	cmdSystem->AddCommand( "shuffleTeams",			Cmd_ShuffleTeams_f,			CMD_FL_GAME,				"shuffle teams" );
 // RAVEN BEGIN
