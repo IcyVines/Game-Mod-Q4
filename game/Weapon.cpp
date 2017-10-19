@@ -32,15 +32,6 @@ END_CLASS
 
 ***********************************************************************/
 
-//Mod
-#define Dexterity 0
-#define Perception 1
-#define Agility 2
-#define Vitality 3
-#define Endurance 4
-#define Luck 5
-//Mod End
-
 /*
 ================
 rvViewWeapon::rvViewWeapon()

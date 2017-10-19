@@ -25,6 +25,7 @@
 #endif
 // RAVEN END
 
+
 #ifdef _WIN32
 #include "TypeInfo.h"
 #else
@@ -556,12 +557,6 @@ void Cmd_Give_f( const idCmdArgs &args ) {
 // RITUAL END
 
 //Mod
-#define Dexterity 0
-#define Perception 1
-#define Agility 2
-#define Vitality 3
-#define Endurance 4
-#define Luck 5
 
 void CheckPlayerStat( idPlayer* player, const char* name)
 {
@@ -595,6 +590,9 @@ void CheckPlayerStat( idPlayer* player, const char* name)
 		gameLocal.Printf("Vitality: %d\n", player->inventory.stats[Vitality]);
 		gameLocal.Printf("Endurance: %d\n", player->inventory.stats[Endurance]);
 		gameLocal.Printf("Luck: %d\n", player->inventory.stats[Luck]);
+	}
+	else if (idStr::Icmp(name, "experience") == 0) {
+		gameLocal.Printf("Experience: %d\n", player->inventory.experience);
 	}
 	else {
 		gameLocal.Printf("No Such Stat!\n");
@@ -632,6 +630,10 @@ void AddStatToPlayer( idPlayer* player, const char* name, const char* value)
 	}
 	else if (idStr::Icmp(name, "luck") == 0) {
 		stat = Luck;
+	}
+	else if (idStr::Icmp(name, "experience") == 0) {
+		player->inventory.experience += amount;
+		return;
 	}
 	else {
 		gameLocal.Printf("No Such Stat!\n");

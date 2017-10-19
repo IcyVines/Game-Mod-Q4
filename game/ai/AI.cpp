@@ -1520,6 +1520,7 @@ void idAI::AdjustHealthByDamage	( int damage ) {
 	if ( aifl.undying ) {
 		return;
 	}	
+
 	idActor::AdjustHealthByDamage ( damage );
 
 	if ( g_perfTest_aiUndying.GetBool() && health <= 0 ) {
@@ -1534,20 +1535,6 @@ idAI::Pain
 =====================
 */
 bool idAI::Pain( idEntity *inflictor, idEntity *attacker, int damage, const idVec3 &dir, int location ) {
-	
-	//Mod
-	#define Dexterity 0
-	#define Perception 1
-	#define Agility 2
-	#define Vitality 3
-	#define Endurance 4
-	#define Luck 5
-	if (attacker->IsType(idPlayer::GetClassType())) {
-		auto killer = static_cast<idPlayer*>(attacker);
-		int dexterity = killer->inventory.stats[Dexterity];
-		damage *= (1 + dexterity / 50.0f);
-	}
-	//Mod End
 	
 	aifl.pain   = idActor::Pain( inflictor, attacker, damage, dir, location );
 	aifl.damage = true;
@@ -1645,8 +1632,14 @@ void idAI::Killed( idEntity *inflictor, idEntity *attacker, int damage, const id
 	//Mod
 	if (attacker->IsType(idPlayer::GetClassType())) {
 		auto killer = static_cast<idPlayer*>(attacker);
-		int exp = killer->inventory.experience += 10;
-		gameLocal.Printf("KILLED EXP: %d\n", exp);
+		int luck = killer->inventory.stats[Luck];
+		int xp = 10;
+		if (gameLocal.random.RandomInt(100)< luck) {
+			gameLocal.Printf("Lucky Kill!\n");
+			xp += 10;
+		}
+		killer->inventory.experience += xp;
+		gameLocal.Printf("Added XP: %d\n", xp);
 	}
 	//Mod End
 

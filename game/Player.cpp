@@ -119,15 +119,6 @@ const idEventDef EV_Player_AllowNewObjectives( "<allownewobjectives>" );
 
 // RAVEN END
 
-//Mod
-#define Dexterity 0
-#define Perception 1
-#define Agility 2
-#define Vitality 3
-#define Endurance 4
-#define Luck 5
-//Mod End
-
 CLASS_DECLARATION( idActor, idPlayer )
 //	EVENT( EV_Player_HideDatabaseEntry,		idPlayer::Event_HideDatabaseEntry )
 	EVENT( EV_Player_ZoomIn,				idPlayer::Event_ZoomIn )
@@ -285,6 +276,16 @@ void idInventory::GetPersistantData( idDict &dict ) {
 	const idKeyValue *kv;
 	const char *name;
 
+	//Mod
+	dict.SetInt("experience", experience);
+	for (i = 0; i < 6; i++) {
+		name = RMKstatNames[i];
+		if (name) {
+			dict.SetInt(name, stats[i]);
+		}
+	}
+	//End Mod
+
 	// armor
 	dict.SetInt( "armor", armor );
 
@@ -352,6 +353,12 @@ void idInventory::RestoreInventory( idPlayer *owner, const idDict &dict ) {
 	maxHealth		= dict.GetInt( "maxhealth", "100" );
 	//Mod
 	experience		= dict.GetInt("experience", "0");
+	for (i = 0; i < 6; i++) {
+		name = RMKstatNames[i];
+		if (name) {
+			stats[i] = dict.GetInt(name);
+		}
+	}
 	//Mod End
 	armor			= dict.GetInt( "armor", "50" );
 	maxarmor		= dict.GetInt( "maxarmor", "100" );
@@ -10298,6 +10305,19 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 
 		//Mod
 		damage *= (1 - inventory.stats[Endurance]/100.0f);
+		if (gameLocal.random.RandomInt(100) < inventory.stats[Luck]){
+			gameLocal.Printf("Lucky Dodge!\n");
+			//ripped from else statement when damage is 0
+			if (af.IsLoaded()) {
+				af.Rest();
+				BecomeActive(TH_PHYSICS);
+			}
+			lastDamageDir = dir;
+			lastDamageDir.Normalize();
+			lastDamageDef = damageDef->Index();
+			lastDamageLocation = location;
+			return;
+		}
 		//Mod End
 
 		if ( damage < 1 ) {

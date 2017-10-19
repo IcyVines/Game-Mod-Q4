@@ -88,7 +88,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName)/$(ProjectName).pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)$(ProjectName)/</AssemblerListingLocation>
@@ -298,6 +298,7 @@
     <ClCompile Include="game\Light.cpp" />
     <ClCompile Include="game\LipSync.cpp" />
     <ClCompile Include="game\Misc.cpp" />
+    <ClCompile Include="game\mod\ModRMK.cpp" />
     <ClCompile Include="game\Moveable.cpp" />
     <ClCompile Include="game\Mover.cpp" />
     <ClCompile Include="game\mp\Buying.cpp" />
@@ -423,6 +424,8 @@
     <ClInclude Include="game\Light.h" />
     <ClInclude Include="game\LipSync.h" />
     <ClInclude Include="game\Misc.h" />
+    <ClInclude Include="game\ModRMK.h" />
+    <ClInclude Include="game\mod\ModRMK.h" />
     <ClInclude Include="game\Moveable.h" />
     <ClInclude Include="game\Mover.h" />
     <ClInclude Include="game\mp\Buying.h" />

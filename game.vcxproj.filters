@@ -37,6 +37,9 @@
     <Filter Include="Game\MP\Stats">
       <UniqueIdentifier>{09f693a3-1c45-4600-996f-d12bfeff075f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\ModRMK">
+      <UniqueIdentifier>{1d410855-5ec9-4428-81e1-fac5276efe70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="game\Actor.cpp">
@@ -516,6 +519,7 @@
     <ClCompile Include="game\mp\stats\StatWindow.cpp">
       <Filter>Game\MP\Stats</Filter>
     </ClCompile>
+    <ClCompile Include="game\mod\ModRMK.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game\Actor.h">
@@ -830,6 +834,8 @@
     <ClInclude Include="game\mp\stats\StatWindow.h">
       <Filter>Game\MP\Stats</Filter>
     </ClInclude>
+    <ClInclude Include="game\ModRMK.h" />
+    <ClInclude Include="game\mod\ModRMK.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="game\Game.def" />

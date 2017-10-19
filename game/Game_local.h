@@ -11,6 +11,10 @@ inline void operator delete[]( void *p ) { Memory::Free(p); }
 #endif
 // RAVEN END
 
+//Mod
+#include "mod/ModRMK.h"
+//Mod End
+
 /*
 ===============================================================================
 
