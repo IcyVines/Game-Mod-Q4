@@ -1632,7 +1632,7 @@ void idAI::Killed( idEntity *inflictor, idEntity *attacker, int damage, const id
 	//Mod
 	if (attacker->IsType(idPlayer::GetClassType())) {
 		auto killer = static_cast<idPlayer*>(attacker);
-		int luck = killer->inventory.stats[Luck];
+		int luck = killer->inventory.stats[Luck]*StatScale(Luck, killer->inventory.className);
 		int xp = 10;
 		if (gameLocal.random.RandomInt(100)< luck) {
 			gameLocal.Printf("Lucky Kill!\n");

@@ -2509,7 +2509,8 @@ void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuse
 	//Mod
 	if (owner->IsType(idPlayer::GetClassType())) {
 		auto player = static_cast<idPlayer*>(owner);
-		int perception = owner->inventory.stats[Perception];
+		//gameLocal.Printf("Current Perception Scaling: %d.\n", StatScale(Perception, player->inventory.className));
+		int perception = owner->inventory.stats[Perception]*StatScale(Perception, player->inventory.className);
 		spread *= (1 - perception / 100.0f);
 		if (spread < 0) {
 			spread = 0;

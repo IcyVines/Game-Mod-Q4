@@ -198,6 +198,7 @@ public:
 	//Mod
 	int						experience;
 	int						stats[6];
+	int						className;
 	//Modend
 	int						weapons;
 // RITUAL BEGIN

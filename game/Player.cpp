@@ -203,6 +203,7 @@ void idInventory::Clear( void ) {
 	//Mod
 	experience			= 0;
 	for (int i = 0; i < 6; i++) stats[i] = 0;
+	className			= 0;
 	//Mod End
 	weapons				= 0;
 	carryOverWeapons	= 0;
@@ -284,6 +285,7 @@ void idInventory::GetPersistantData( idDict &dict ) {
 			dict.SetInt(name, stats[i]);
 		}
 	}
+	dict.SetInt("className", className);
 	//End Mod
 
 	// armor
@@ -359,6 +361,7 @@ void idInventory::RestoreInventory( idPlayer *owner, const idDict &dict ) {
 			stats[i] = dict.GetInt(name);
 		}
 	}
+	className		= dict.GetInt("className", "0");
 	//Mod End
 	armor			= dict.GetInt( "armor", "50" );
 	maxarmor		= dict.GetInt( "maxarmor", "100" );
@@ -428,6 +431,7 @@ void idInventory::Save( idSaveGame *savefile ) const {
 	for (i = 0; i < 6; i++) {
 		savefile->WriteInt(stats[i]);
 	}
+	savefile->WriteInt( className );
 	//Mod End
 	savefile->WriteInt( weapons );
 	savefile->WriteInt( powerups );
@@ -514,6 +518,7 @@ void idInventory::Restore( idRestoreGame *savefile ) {
 	for (i = 0; i < 6; i++) {
 		savefile->ReadInt(stats[i]);
 	}
+	savefile->ReadInt( className );
 	//Mod End
 	savefile->ReadInt( weapons );
 	savefile->ReadInt( powerups );
@@ -8799,7 +8804,7 @@ void idPlayer::AdjustSpeed( void ) {
 	}
 
 	//Mod
-	speed += 10*inventory.stats[Agility];
+	speed += 10*inventory.stats[Agility]*StatScale(Agility, inventory.className);
 	//Mod End
 
 	physicsObj.SetSpeed( speed, pm_crouchspeed.GetFloat() );
@@ -10304,8 +10309,8 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 		}
 
 		//Mod
-		damage *= (1 - inventory.stats[Endurance]/100.0f);
-		if (gameLocal.random.RandomInt(100) < inventory.stats[Luck]){
+		damage *= (1 - (inventory.stats[Endurance]*StatScale(Endurance, inventory.className))/100.0f);
+		if (gameLocal.random.RandomInt(100) < inventory.stats[Luck]*StatScale(Luck, inventory.className)){
 			gameLocal.Printf("Lucky Dodge!\n");
 			//ripped from else statement when damage is 0
 			if (af.IsLoaded()) {

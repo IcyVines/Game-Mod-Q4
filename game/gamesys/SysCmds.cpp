@@ -607,11 +607,19 @@ void AddStatToPlayer( idPlayer* player, const char* name, const char* value)
 		return;
 	}
 
+	if (player->inventory.className == 0) {
+		gameLocal.Printf("Choose a Class first! Just use the command \"chooseclass 'class'\".\n");
+		return;
+	}
+
 	if (!value) {
 		value = "1";
 	}
-
 	int amount = atoi(value);
+	if (amount < 1) {
+		gameLocal.Printf("Amount is too low!\n");
+		return;
+	}
 
 	if (idStr::Icmp(name, "dexterity") == 0) {
 		stat = Dexterity;
@@ -648,14 +656,51 @@ void AddStatToPlayer( idPlayer* player, const char* name, const char* value)
 	else {
 		player->inventory.stats[stat] += amount;
 		if (stat == Vitality) {
-			player->inventory.maxHealth += 3 * amount;
-			player->health += amount*2;
+			player->inventory.maxHealth += 3 * amount * StatScale(Vitality, player->inventory.className);
+			player->health += amount * 2 * StatScale(Vitality, player->inventory.className);
 		}
 		experience = player->inventory.experience -= amount*30;
 		gameLocal.Printf("Stat raised. You now have %d Experience.\n", experience);
 	}
 }
 
+void SelectPlayerClass(idPlayer* player, const char* name)
+{
+
+	if (!player || !name) {
+		return;
+	}
+
+	int className = player->inventory.className;
+	if ( className != 0 ) {
+		gameLocal.Printf("I'm afraid I can't let you do that! You're already a %s!\n", RMKclassNames[className]);
+		return;
+	}
+
+	if (idStr::Icmp(name, "cowboy") == 0) {
+		gameLocal.Printf("Yee-haw! Go get'em, Cowboy!\n");
+		player->inventory.className = Cowboy;
+	}
+	else if (idStr::Icmp(name, "ranger") == 0) {
+		gameLocal.Printf("Tryna' keep the peace, eh?\n");
+		player->inventory.className = Ranger;
+	}
+	else if (idStr::Icmp(name, "deadeye") == 0) {
+		gameLocal.Printf("You won't miss now.\n");
+		player->inventory.className = Deadeye;
+	}
+	else if (idStr::Icmp(name, "vanguard") == 0) {
+		gameLocal.Printf("Bring the heat, baby!\n");
+		player->inventory.className = Vanguard;
+	}
+	else if (idStr::Icmp(name, "juggernaut") == 0) {
+		gameLocal.Printf("Now who's the real monster?\n");
+		player->inventory.className = Juggernaut;
+	}
+	else {
+		gameLocal.Printf("No Such Class!\n");
+	}
+}
 
 void Cmd_CheckStat_f(const idCmdArgs &args) {
 	idPlayer	*player;
@@ -673,6 +718,15 @@ void Cmd_AddStat_f(const idCmdArgs &args) {
 		return;
 	}
 	AddStatToPlayer(player, args.Argv(1), args.Argv(2));
+}
+
+void Cmd_ChooseClass_f(const idCmdArgs &args) {
+	idPlayer	*player;
+	player = gameLocal.GetLocalPlayer();
+	if (!player) {
+		return;
+	}
+	SelectPlayerClass(player, args.Argv(1));
 }
 //Mod End
 
@@ -3215,6 +3269,7 @@ void idGameLocal::InitConsoleCommands( void ) {
 	//Mod
 	cmdSystem->AddCommand("checkstat", Cmd_CheckStat_f, CMD_FL_GAME, "lets you check a stat's amount");
 	cmdSystem->AddCommand("addstat", Cmd_AddStat_f, CMD_FL_GAME, "lets you add to a stat's amount if possible");
+	cmdSystem->AddCommand("chooseclass", Cmd_ChooseClass_f, CMD_FL_GAME, "lets you choose your class if possible");
 	//Mod End
 	
 	cmdSystem->AddCommand( "shuffleTeams",			Cmd_ShuffleTeams_f,			CMD_FL_GAME,				"shuffle teams" );

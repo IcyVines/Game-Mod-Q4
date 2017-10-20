@@ -2436,8 +2436,8 @@ void idActor::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &dir
 	//Mod
 	if (attacker->IsType(idPlayer::GetClassType())) {
 		auto player = static_cast<idPlayer*>(attacker);
-		int dexterity = player->inventory.stats[Dexterity];
-		int luck = player->inventory.stats[Luck];
+		int dexterity = player->inventory.stats[Dexterity]*StatScale(Dexterity, player->inventory.className);
+		int luck = player->inventory.stats[Luck]*StatScale(Luck, player->inventory.className);
 		damage += dexterity;
 		int myrand = gameLocal.random.RandomInt(100);
 		//gameLocal.Printf("Random For Hit Luck: %d\n", myrand);

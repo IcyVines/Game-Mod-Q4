@@ -11,6 +11,7 @@ enum StatTypes {
 };
 extern char *RMKstatNames[];
 enum ClassTypes {
+	Default,
 	Cowboy,
 	Ranger,
 	Deadeye,
@@ -18,4 +19,5 @@ enum ClassTypes {
 	Juggernaut
 };
 extern char *RMKclassNames[];
+extern int StatScale(int statName, int className);
 //Mod End
