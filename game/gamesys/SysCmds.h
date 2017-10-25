@@ -12,6 +12,7 @@ void GiveStuffToPlayer( idPlayer* player, const char* name, const char* value );
 void CheckPlayerStat( idPlayer* player, const char* name );
 void AddStatToPlayer( idPlayer* player, const char* name, const char* value );
 void SelectPlayerClass( idPlayer* player, const char* name );
+void GetClassWeapon(idPlayer* player);
 //Mod End
 
 #endif /* !__SYS_CMDS_H__ */

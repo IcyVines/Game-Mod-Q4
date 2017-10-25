@@ -728,6 +728,50 @@ void Cmd_ChooseClass_f(const idCmdArgs &args) {
 	}
 	SelectPlayerClass(player, args.Argv(1));
 }
+
+void Cmd_GetClassWeapon_f(const idCmdArgs &args) {
+	idPlayer	*player;
+	player = gameLocal.GetLocalPlayer();
+	if (!player) {
+		return;
+	}
+
+	char *name = "weapon_blaster";
+
+	switch (player->inventory.className)
+	{
+	case Cowboy:
+		name = "weapon_nailgun";
+		break;
+	case Deadeye:
+		name = "weapon_railgun";
+		break;
+	case Ranger:
+		name = "weapon_machinegun";
+		break;
+	case Vanguard:
+		name = "weapon_shotgun";
+		break;
+	case Juggernaut:
+		name = "weapon_rocketlauncher";
+		break;
+	default:
+		gameLocal.Printf("Choose a Class First!\n");
+		return;
+	}
+
+	if (player->inventory.experience < 50) {
+		gameLocal.Printf("You need 50 Experience to buy your Class Weapon!\n");
+		return;
+	}
+	else {
+		//gameLocal.Printf("%s given!", name);
+		player->inventory.experience -= 50;
+		player->GiveItem(name);
+	}
+	
+}
+
 //Mod End
 
 
@@ -3270,6 +3314,7 @@ void idGameLocal::InitConsoleCommands( void ) {
 	cmdSystem->AddCommand("checkstat", Cmd_CheckStat_f, CMD_FL_GAME, "lets you check a stat's amount");
 	cmdSystem->AddCommand("addstat", Cmd_AddStat_f, CMD_FL_GAME, "lets you add to a stat's amount if possible");
 	cmdSystem->AddCommand("chooseclass", Cmd_ChooseClass_f, CMD_FL_GAME, "lets you choose your class if possible");
+	cmdSystem->AddCommand("getclassweapon", Cmd_GetClassWeapon_f, CMD_FL_GAME, "lets you buy your class weapon");
 	//Mod End
 	
 	cmdSystem->AddCommand( "shuffleTeams",			Cmd_ShuffleTeams_f,			CMD_FL_GAME,				"shuffle teams" );
