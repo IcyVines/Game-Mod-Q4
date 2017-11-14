@@ -277,6 +277,9 @@ void idInventory::GetPersistantData( idDict &dict ) {
 	const idKeyValue *kv;
 	const char *name;
 
+	//Health, Added in
+	dict.SetInt("maxHealth", maxHealth);
+
 	//Mod
 	dict.SetInt("experience", experience);
 	for (i = 0; i < 6; i++) {
@@ -352,7 +355,8 @@ void idInventory::RestoreInventory( idPlayer *owner, const idDict &dict ) {
 	//Clear();
 
 	// health/armor
-	maxHealth		= dict.GetInt( "maxhealth", "100" );
+	maxHealth = dict.GetInt("maxhealth", "100");// +3 * stats[Vitality] * StatScale(Vitality, className);
+
 	//Mod
 	experience		= dict.GetInt("experience", "0");
 	for (i = 0; i < 6; i++) {
@@ -363,6 +367,7 @@ void idInventory::RestoreInventory( idPlayer *owner, const idDict &dict ) {
 	}
 	className		= dict.GetInt("className", "0");
 	//Mod End
+
 	armor			= dict.GetInt( "armor", "50" );
 	maxarmor		= dict.GetInt( "maxarmor", "100" );
 

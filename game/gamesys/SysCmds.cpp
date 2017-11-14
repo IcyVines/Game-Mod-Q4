@@ -643,6 +643,11 @@ void AddStatToPlayer( idPlayer* player, const char* name, const char* value)
 		player->inventory.experience += amount;
 		return;
 	}
+	else if (idStr::Icmp(name, "reset") == 0) {
+		for (int i = 0; i < 6; i++) player->inventory.stats[i] = 0;
+		//player->inventory.maxHealth -= 3 * amount * StatScale(Vitality, player->inventory.className);
+		return;
+	}
 	else {
 		gameLocal.Printf("No Such Stat!\n");
 		return;
@@ -668,6 +673,13 @@ void SelectPlayerClass(idPlayer* player, const char* name)
 {
 
 	if (!player || !name) {
+		return;
+	}
+
+	if (idStr::Icmp(name, "reset") == 0) {
+		gameLocal.Printf("Fickle creature.\n");
+		//player->inventory.maxHealth -= (StatScale(Vitality, player->inventory.className)-1)*3*player->inventory.stats[Vitality];
+		player->inventory.className = Default;
 		return;
 	}
 
